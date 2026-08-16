@@ -1,45 +1,200 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-# image will be published to ghcr.io/<user>/<name>
 name: forge
-# description will be included in the image's metadata
-description: This is my personal OS image.
+description: Fedora KDE Atomic workstation for software development
 
-# the base image to build on top of (FROM) and the version tag to use
-base-image: ghcr.io/ublue-os/silverblue-main
-image-version: latest # You can pin to a specific version of Fedora as well
+base-image: ghcr.io/ublue-os/aurora-dx-nvidia-open
+image-version: latest
 
-# module configuration, executed in order
-# you can include multiple instances of the same module
 modules:
-  - type: files
-    files:
-      - source: system
-        destination: / # copies files/system/* (* means everything inside it) into your image's root folder /
 
+  # ------------------------------------------------------------
+  # System packages
+  # ------------------------------------------------------------
   - type: dnf
     repos:
-      copr:
-        - atim/starship
+      nonfree: rpmfusion
+
+      files:
+        # Docker's official Fedora repository
+        - https://download.docker.com/linux/fedora/docker-ce.repo
+
     install:
       packages:
-        - micro
-        - starship
+
+        # ---- Development / CLI ----
+        - 7zip
+        - bat
+        - btop
+        - cmake
+        - direnv
+        - fd-find
+        - fish
+        - fuse-libs
+        - fzf
+        - gcc
+        - git
+        - git-delta
+        - git-extras
+        - git-lfs
+        - glab
+        - grsync
+        - htop
+        - httpie
+        - jq
+        - lm_sensors
+        - lsd
+        - lshw
+        - lsof
+        - mtr
+        - ncdu
+        - nethogs
+        - nmap-ncat
+        - openssl-devel
+        - parallel
+        - pipx
+        - pv
+        - ripgrep
+        - rlwrap
+        - screen
+        - smartmontools
+        - socat
+        - strace
+        - sysstat
+        - tcpdump
+        - tmux
+        - tree
+        - unar
+        - unrar
+        - whois
+        - xclip
+        - xxd
+        - yq
+        - zoxide
+        - zsh
+        - zsh-autosuggestions
+        - zsh-syntax-highlighting
+
+        # ---- Build / development ----
+        - java-25-openjdk-devel
+
+        # ---- KDE applications ----
+        - ark
+        - filelight
+        - gimp
+        - kaccounts-integration
+        - kaccounts-providers
+        - kamoso
+        - kate
+        - kdiff3
+        - kleopatra
+        - kompare
+        - meld
+        - yakuake
+
+        # ---- Docker ----
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+
+        # ---- Multimedia ----
+        - ffmpeg
+        - gstreamer1-plugins-base
+        - gstreamer1-plugins-good
+        - gstreamer1-plugins-good-extras
+        - gstreamer1-plugins-bad-free
+        - gstreamer1-plugins-bad-freeworld
+        - gstreamer1-plugins-ugly
+        - gstreamer1-plugin-libav
+        - gstreamer1-vaapi
+        - intel-media-driver
+        - libva-intel-driver
+        - libva-utils
+        - phonon-qt5-backend-gstreamer
+
     remove:
       packages:
-        # example: removing firefox (in favor of the flatpak)
-        # "firefox" is the main package, "firefox-langpacks" is a dependency
+        # Keep Firefox as Flatpak rather than Fedora RPM.
         - firefox
-        - firefox-langpacks # also remove firefox dependency (not required for all packages, this is a special case)
+        - firefox-langpacks
 
+        # KDE applications you don't use.
+        - dragon
+        - elisa-player
+        - juk
+        - kaddressbook
+        - kmahjongg
+        - kmail
+        - kmail-header-theme-editor
+        - kmines
+        - kmouth
+        - kontact
+        - konversation
+        - korganizer
+        - kpat
+        - krdc
+        - krfb
+        - ktnef
+        - ktorrent
+        - marble
+
+  # ------------------------------------------------------------
+  # Fonts
+  # ------------------------------------------------------------
+  - type: dnf
+    install:
+      packages:
+        - google-noto-sans-fonts
+        - google-noto-cjk-fonts
+        - google-noto-emoji-color-fonts
+        - google-roboto-fonts
+        - rsms-inter-fonts
+        - rsms-inter-vf-fonts
+        - jetbrains-mono-fonts-all
+        - ibm-plex-fonts-all
+
+  # ------------------------------------------------------------
+  # Docker service
+  # ------------------------------------------------------------
+  - type: systemd
+    system:
+      enabled:
+        - docker.service
+
+  # ------------------------------------------------------------
+  # Flatpaks
+  # ------------------------------------------------------------
   - type: default-flatpaks
     configurations:
-      - notify: true # Send notification after install/uninstall is finished (true/false)
-        scope: system
-        # If no repo information is specified, Flathub will be used by default
-        install: # system flatpaks we want all users to have and not remove
-          - org.mozilla.firefox
-          - org.gnome.Loupe
-      - scope: user # Also add Flathub user repo, but no user packages
 
-  - type: signing # this sets up the proper policy & signing files for signed images to work fully
+      - scope: system
+        repo:
+          title: Flathub (system)
+
+        install:
+          - org.mozilla.firefox
+          - org.onlyoffice.desktopeditors
+          - com.bitwarden.desktop
+          - com.github.tchx84.Flatseal
+          - com.usebruno.Bruno
+
+      - scope: user
+        repo:
+          title: Flathub (user)
+
+  # ------------------------------------------------------------
+  # NVIDIA
+  # ------------------------------------------------------------
+  # We should verify the correct Aurora NVIDIA base/akmods
+  # configuration before enabling this.
+  #
+  # Do NOT carry the old nvidia.sh script into the image.
+  #
+  # ------------------------------------------------------------
+
+  # ------------------------------------------------------------
+  # Image signing
+  # ------------------------------------------------------------
+  - type: signing
