@@ -12,9 +12,14 @@ modules:
   # System packages
   # ------------------------------------------------------------
   - type: dnf
+    # No `nonfree` repo choice here on purpose: Aurora's base image already
+    # ships full multimedia codecs (ffmpeg, x264, x265, etc.) preinstalled
+    # via negativo17. Setting `nonfree: rpmfusion` disables negativo17's
+    # repos, which orphans the already-installed packages' library
+    # requirements (e.g. libx265.so.216) since rpmfusion's builds don't
+    # provide the exact same sonames, breaking the build. Leave negativo17
+    # as-is unless a package is needed that's only available via RPM Fusion.
     repos:
-      nonfree: rpmfusion
-
       files:
         # Docker's official Fedora repository
         - https://download.docker.com/linux/fedora/docker-ce.repo
