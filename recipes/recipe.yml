@@ -109,13 +109,13 @@ modules:
         - gstreamer1-plugins-base
         - gstreamer1-plugins-good
         - gstreamer1-plugins-good-extras
-        - gstreamer1-plugins-bad-free
+        # gstreamer1-plugins-bad-freeworld (negativo17's full build) obsoletes
+        # gstreamer1-plugins-bad-free (Fedora's patent-safe build), so only
+        # the freeworld package is listed here.
         - gstreamer1-plugins-bad-freeworld
         - gstreamer1-plugins-ugly
         - gstreamer1-plugin-libav
         - gstreamer1-vaapi
-        - intel-media-driver
-        - libva-intel-driver
         - libva-utils
         - phonon-qt5-backend-gstreamer
 
