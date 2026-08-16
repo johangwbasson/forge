@@ -106,6 +106,7 @@ modules:
 
         # ---- Multimedia ----
         - ffmpeg
+        - vlc
         - gstreamer1-plugins-base
         - gstreamer1-plugins-good
         - gstreamer1-plugins-good-extras
@@ -124,6 +125,9 @@ modules:
         # Keep Firefox as Flatpak rather than Fedora RPM.
         - firefox
         - firefox-langpacks
+
+        # Game streaming host, not used.
+        - sunshine
 
         # KDE applications you don't use.
         - dragon
@@ -155,6 +159,8 @@ modules:
         - google-noto-cjk-fonts
         - google-noto-emoji-color-fonts
         - ibm-plex-fonts-all
+        - rsms-inter-fonts
+        - rsms-inter-vf-fonts
 
   - type: fonts
     fonts:
