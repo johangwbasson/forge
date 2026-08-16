@@ -149,12 +149,16 @@ modules:
         - google-noto-sans-fonts
         - google-noto-cjk-fonts
         - google-noto-emoji-color-fonts
-        - google-roboto-fonts
-        - rsms-inter-fonts
-        - rsms-inter-vf-fonts
-        - jetbrains-mono-fonts-all
         - ibm-plex-fonts-all
 
+  - type: fonts
+    fonts:
+      nerd-fonts:
+        - JetBrainsMono
+
+      google-fonts:
+        - Inter
+        - Roboto
   # ------------------------------------------------------------
   # Docker service
   # ------------------------------------------------------------
