@@ -25,15 +25,9 @@ modules:
         - https://download.docker.com/linux/fedora/docker-ce.repo
         # 1Password's official repository (files/dnf/1password.repo)
         - 1password.repo
-        # MEGA's official repository (files/dnf/megasync.repo). Pinned to
-        # Fedora 44 — unverified whether MEGA has built for fc44 yet; bump
-        # the version here if/when the Aurora base image moves to a newer
-        # Fedora release, or if this fc44 path turns out not to exist.
-        - megasync.repo
 
       keys:
         - https://downloads.1password.com/linux/keys/1password.asc
-        - https://mega.nz/linux/repo/Fedora_44/repodata/repomd.xml.key
 
     install:
       # Aurora's base image ships some packages (e.g. gstreamer1-plugins-bad-free,
@@ -139,11 +133,6 @@ modules:
         - gstreamer1-vaapi
         - libva-utils
         - phonon-qt5-backend-gstreamer
-
-        # ---- Cloud storage ----
-        # From MEGA's own repo (files/dnf/megasync.repo) — RPM Fusion nonfree
-        # doesn't have a Fedora 44 build of megasync yet.
-        - megasync
 
     remove:
       packages:
